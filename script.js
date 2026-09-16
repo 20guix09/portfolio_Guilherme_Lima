@@ -1,0 +1,129 @@
+/* Animações e interações principais */
+document.body.classList.add('loading');
+const hasGSAP = typeof window.gsap !== 'undefined';
+
+function finishLoader(){
+  document.body.classList.remove('loading');
+  const loader=document.querySelector('.loader');
+  if(hasGSAP){
+    const timeline=gsap.timeline().to('.loader__line i',{width:'100%',duration:.65,ease:'power2.inOut'}).to('.loader__count',{innerText:100,duration:.55,snap:{innerText:1}},'<').to(loader,{yPercent:-100,duration:.9,ease:'power4.inOut'});
+    if(document.querySelector('.title-line'))timeline.from('.title-line',{yPercent:110,opacity:0,stagger:.12,duration:1,ease:'power4.out'},'-=.35').from('.hero .reveal',{y:30,opacity:0,stagger:.1,duration:.8},'-=.65');
+    else timeline.from('.archive-hero>*',{y:34,opacity:0,stagger:.08,duration:.75,ease:'power3.out'},'-=.42');
+    timeline.set(loader,{display:'none'});
+  }else{loader.style.display='none'}
+}
+window.addEventListener('load',finishLoader);
+
+if(hasGSAP){
+  gsap.registerPlugin(ScrollTrigger);
+  document.querySelectorAll('.split-text').forEach(el=>{
+    const nodes=[];
+    [...el.childNodes].forEach(node=>{
+      if(node.nodeType===3){node.textContent.split('').forEach(letter=>{const s=document.createElement('span');s.className='char';s.textContent=letter===' '?'\u00a0':letter;nodes.push(s)})}else{nodes.push(node.cloneNode(true))}
+    }); el.replaceChildren(...nodes);
+    gsap.to(el.querySelectorAll('.char'),{color:'#f4f3f8',stagger:.015,scrollTrigger:{trigger:el,start:'top 78%',end:'bottom 45%',scrub:1}});
+  });
+  gsap.utils.toArray('.reveal').forEach(el=>gsap.from(el,{y:55,opacity:0,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
+  if(document.querySelector('.hero')){
+    gsap.to('.orb--one',{y:180,x:-80,scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});
+  }
+}
+
+const cursor=document.querySelector('.cursor');
+if(matchMedia('(pointer:fine)').matches){
+  window.addEventListener('mousemove',e=>{if(hasGSAP)gsap.to(cursor,{x:e.clientX,y:e.clientY,duration:.18,ease:'power2.out'});else{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px'}});
+  document.querySelectorAll('a,button,[data-cursor]').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.classList.add('active');cursor.querySelector('span').textContent=el.dataset.cursor||'ABRIR'});el.addEventListener('mouseleave',()=>cursor.classList.remove('active'))});
+}
+
+document.querySelectorAll('.magnetic').forEach(el=>{
+  el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left-r.width/2)*.18,y=(e.clientY-r.top-r.height/2)*.18;if(hasGSAP)gsap.to(el,{x,y,duration:.25})});
+  el.addEventListener('mouseleave',()=>{if(hasGSAP)gsap.to(el,{x:0,y:0,duration:.5,ease:'elastic.out(1,.4)'})});
+});
+
+const langButton=document.querySelector('.lang-toggle');
+const langPills=document.querySelectorAll('.lang-pills button');
+const supportedLanguages=['pt','en','es','it','fr'];
+let currentLang=supportedLanguages.includes(localStorage.getItem('portfolio-lang'))?localStorage.getItem('portfolio-lang'):'pt';
+const setText=(selector,pt,en,html=false)=>{const el=document.querySelector(selector);if(!el)return;const value=currentLang==='en'?en:pt;if(html)el.innerHTML=value;else el.textContent=value;};
+const fillTicker=text=>document.querySelectorAll('.ticker-group').forEach(group=>{group.replaceChildren(...Array.from({length:12},()=>{const span=document.createElement('span');span.textContent=text;return span;}));});
+const applyLanguage=()=>{
+  document.documentElement.lang={pt:'pt-BR',en:'en',es:'es',it:'it',fr:'fr'}[currentLang];
+  if(langButton)langButton.value=currentLang;
+  langPills.forEach(button=>button.classList.toggle('active',button.dataset.lang===currentLang));
+  const tickerCopy={pt:'DESIGN • CÓDIGO • ESTRATÉGIA • EXPERIÊNCIAS •   ',en:'DESIGN • CODE • STRATEGY • EXPERIENCES •   ',es:'DISEÑO • CÓDIGO • ESTRATEGIA • EXPERIENCIAS •   ',it:'DESIGN • CODICE • STRATEGIA • ESPERIENZE •   ',fr:'DESIGN • CODE • STRATÉGIE • EXPÉRIENCES •   '}[currentLang];fillTicker(tickerCopy);
+  setText('.rotate-notice strong','Uma experiência ainda melhor','An even better experience');setText('.rotate-notice small','Deite o celular para aproveitar melhor o portfólio.','Rotate your phone for the best portfolio experience.');
+  if(document.body.classList.contains('archive-page')){
+    setText('.archive-nav nav a:nth-child(1)','Sobre','About');setText('.archive-nav nav a:nth-child(2)','Contato','Contact');setText('.archive-nav .nav__status','← Portfólio','← Portfolio');
+    setText('.archive-hero__label','ARQUIVO / PROJETOS','ARCHIVE / PROJECTS');setText('.archive-hero h1','TRABALHOS QUE<br />VIRARAM PRODUTO.','WORK THAT<br />BECAME PRODUCT.',true);setText('.archive-hero p','Uma seleção de sistemas, plataformas e experiências digitais desenvolvidas para projetos nacionais e internacionais. Novos trabalhos entram aqui conforme são publicados.','A selection of systems, platforms and digital experiences developed for national and international projects. New work is added as it is published.');
+    setText('.archive-list__head .section-label','<span>01</span> TODOS OS PROJETOS','<span>01</span> ALL PROJECTS',true);setText('.archive-list__head>p','06 PROJETOS PUBLICADOS','06 PUBLISHED PROJECTS');
+    const cards=document.querySelectorAll('.archive-card');
+    const cardCopy=[
+      ['01 / PLATAFORMA','01 / PLATFORM','Diagnóstico, integração de soluções e acompanhamento de resultados.','Diagnosis, solution integration and results tracking.',['ESTRATÉGIA','TECNOLOGIA','NACIONAL'],['STRATEGY','TECHNOLOGY','NATIONAL']],
+      ['02 / WEB APP','02 / WEB APP','Sistema web de gestão de clínicas médicas.','Web-based management system for medical clinics.',['GESTÃO','SAÚDE','TREINAMENTO'],['MANAGEMENT','HEALTHCARE','TRAINING']],
+      ['03 / ESTÚDIO DIGITAL','03 / DIGITAL STUDIO','Sites e sistemas para pequenos negócios ganharem presença digital.','Websites and systems that give small businesses a stronger digital presence.',['WEB DESIGN','DESENVOLVIMENTO'],['WEB DESIGN','DEVELOPMENT']],
+      ['04 / SITE INSTITUCIONAL','04 / CORPORATE WEBSITE','Experiência institucional sóbria para apresentar serviços jurídicos com confiança e clareza.','A refined corporate experience presenting legal services with trust and clarity.',['ADVOCACIA','TREINAMENTO'],['LEGAL','TRAINING']],
+      ['05 / SITE INTERNACIONAL','05 / INTERNATIONAL WEBSITE','Site de lash design criado para uma profissional brasileira que atende em Portugal.','Lash design website created for a Brazilian professional working in Portugal.',['BEAUTY','INTERNACIONAL — PT'],['BEAUTY','INTERNATIONAL — PT']],
+      ['06 / SITE INSTITUCIONAL','06 / CORPORATE WEBSITE','Presença digital acolhedora para comunicar psicoterapia com segurança e proximidade.','A welcoming digital presence for communicating psychotherapy with trust and warmth.',['PSICOLOGIA','TREINAMENTO'],['PSYCHOLOGY','TRAINING']]
+    ];
+    cards.forEach((card,i)=>{const c=cardCopy[i];if(!c)return;card.querySelector('.project-card__meta>span').textContent=currentLang==='en'?c[1]:c[0];card.querySelector('.project-card__meta>p').textContent=currentLang==='en'?c[3]:c[2];card.querySelectorAll('.archive-card__tags i').forEach((tag,j)=>tag.textContent=(currentLang==='en'?c[5]:c[4])[j]||tag.textContent);});
+    setText('.archive-footer a','VOLTAR AO PORTFÓLIO ↗','BACK TO PORTFOLIO ↗');
+  }else{
+    setText('.nav nav a:nth-child(1)','Sobre','About');setText('.nav nav a:nth-child(2)','Projetos','Projects');setText('.nav nav a:nth-child(3)','Contato','Contact');setText('.nav__status','<i></i> Disponível','<i></i> Available',true);
+    setText('.hero__eyebrow','PORTFÓLIO / 2026 — LONDRINA, BR','PORTFOLIO / 2026 — LONDRINA, BR');setText('.hero__side p','Desenvolvedor Full Stack<br />& empreendedor digital.','Full Stack Developer<br />& digital entrepreneur.',true);setText('.portrait-wrap span','FULL STACK / CREATIVE DEV','FULL STACK / CREATIVE DEV');
+    setText('.about .section-label','<span>01</span> SOBRE MIM','<span>01</span> ABOUT ME',true);setText('.about__lead','Transformo ideias e problemas reais em produtos digitais claros, rápidos e memoráveis.','I turn ideas and real problems into clear, fast and memorable digital products.');
+    const about=document.querySelectorAll('.about__copy>p');if(about[0])about[0].textContent=currentLang==='en'?'I am Guilherme Lima, a Full Stack developer and CTO at Speed Nexus. I combine technology, engineering and design to create solutions that do more than work — they make an impact.':'Sou Guilherme Lima, desenvolvedor Full Stack e CTO da Speed Nexus. Gosto de unir tecnologia, engenharia e design para criar soluções que não apenas funcionam — elas geram impacto.';if(about[1])about[1].textContent=currentLang==='en'?'From strategy to interface, I build experiences with intention, motion and personality.':'Da estratégia à interface, construo experiências com intenção, movimento e personalidade.';
+    setText('.projects .section-label','<span>02</span> PROJETOS SELECIONADOS','<span>02</span> SELECTED PROJECTS',true);setText('.projects-all','VER TODOS OS PROJETOS ↗','VIEW ALL PROJECTS ↗');
+    const selected=document.querySelectorAll('.projects .project-card__meta p');const pPT=['Assessoria que diagnostica gargalos, conecta tecnologia e especialistas e transforma decisões em resultados acompanháveis.','Sistema web de gestão de clínicas médicas.','Presença digital moderna para negócios que querem crescer.'];const pEN=['Advisory that diagnoses bottlenecks, connects technology and specialists, and turns decisions into measurable results.','Web-based management system for medical clinics.','Modern digital presence for businesses ready to grow.'];selected.forEach((el,i)=>el.textContent=(currentLang==='en'?pEN:pPT)[i]);
+    setText('.skills .section-label','03 STACK & FERRAMENTAS','03 STACK & TOOLS');const skillP=document.querySelectorAll('.skill-card p');const sPT=['Interfaces responsivas, acessíveis e cheias de personalidade.','Aplicações estruturadas, integrações e dados bem organizados.','Diagnóstico, estratégia e execução com foco no resultado real.'];const sEN=['Responsive, accessible interfaces full of personality.','Structured applications, integrations and well-organized data.','Diagnosis, strategy and execution focused on real outcomes.'];skillP.forEach((el,i)=>el.textContent=(currentLang==='en'?sEN:sPT)[i]);
+    setText('.contact .section-label','04 CONTATO','04 CONTACT');setText('.contact__top>p','Tem uma ideia? Vamos tirar do papel.','Have an idea? Let’s bring it to life.');setText('.contact h2','VAMOS CRIAR<br /><em>ALGO INCRÍVEL?</em>','SHALL WE BUILD<br /><em>SOMETHING GREAT?</em>',true);
+    const labels=document.querySelectorAll('.contact-form label>span');const lPT=['Seu nome','Seu e-mail','Conte sobre o projeto'],lEN=['Your name','Your email','Tell me about the project'];labels.forEach((el,i)=>el.textContent=(currentLang==='en'?lEN:lPT)[i]);const fields=document.querySelectorAll('.contact-form input:not([type="hidden"]):not(.form-honey),.contact-form textarea');const phPT=['Como posso te chamar?','voce@exemplo.com','Uma ideia, um desafio, um objetivo...'],phEN=['What should I call you?','you@example.com','An idea, a challenge, a goal...'];fields.forEach((el,i)=>el.placeholder=(currentLang==='en'?phEN:phPT)[i]);setText('.contact-form button','ENVIAR MENSAGEM ↗','SEND MESSAGE ↗');setText('.socials>p','ENCONTRE-ME','FIND ME');
+    setText('footer span:nth-child(2)','FEITO COM INTENÇÃO + CÓDIGO','MADE WITH INTENTION + CODE');setText('footer a','VOLTAR AO TOPO ↑','BACK TO TOP ↑');
+  }
+  if(['es','it','fr'].includes(currentLang))applyExtendedLanguage();
+};
+
+function applyExtendedLanguage(){
+  const copy={
+    es:{about:'Sobre mí',projects:'Proyectos',contact:'Contacto',available:'Disponible',role:'Desarrollador Full Stack<br />& emprendedor digital.',aboutLead:'Transformo ideas y problemas reales en productos digitales claros, rápidos y memorables.',about1:'Soy Guilherme Lima, desarrollador Full Stack y CTO de Speed Nexus. Combino tecnología, ingeniería y diseño para crear soluciones que no solo funcionan: generan impacto.',about2:'De la estrategia a la interfaz, construyo experiencias con intención, movimiento y personalidad.',selected:'Proyectos seleccionados',all:'VER TODOS LOS PROYECTOS ↗',tools:'STACK Y HERRAMIENTAS',contactLead:'¿Tienes una idea? Hagámosla realidad.',contactTitle:'¿CREAMOS<br /><em>ALGO INCREÍBLE?</em>',fields:['Tu nombre','Tu correo','Cuéntame sobre el proyecto'],placeholders:['¿Cómo puedo llamarte?','tu@ejemplo.com','Una idea, un desafío, un objetivo...'],send:'ENVIAR MENSAJE ↗',find:'ENCUÉNTRAME',made:'HECHO CON INTENCIÓN + CÓDIGO',top:'VOLVER ARRIBA ↑',archive:'ARCHIVO / PROYECTOS',archiveTitle:'TRABAJOS QUE<br />SE CONVIRTIERON EN PRODUCTO.',archiveLead:'Una selección de sistemas, plataformas y experiencias digitales desarrolladas para proyectos nacionales e internacionales. Se añaden nuevos trabajos a medida que se publican.',allProjects:'TODOS LOS PROYECTOS',published:'06 PROYECTOS PUBLICADOS',back:'VOLVER AL PORTAFOLIO ↗'},
+    it:{about:'Chi sono',projects:'Progetti',contact:'Contatti',available:'Disponibile',role:'Sviluppatore Full Stack<br />& imprenditore digitale.',aboutLead:'Trasformo idee e problemi reali in prodotti digitali chiari, veloci e memorabili.',about1:'Sono Guilherme Lima, sviluppatore Full Stack e CTO di Speed Nexus. Unisco tecnologia, ingegneria e design per creare soluzioni che non si limitano a funzionare: generano impatto.',about2:'Dalla strategia all’interfaccia, costruisco esperienze con intenzione, movimento e personalità.',selected:'Progetti selezionati',all:'VEDI TUTTI I PROGETTI ↗',tools:'STACK E STRUMENTI',contactLead:'Hai un’idea? Realizziamola.',contactTitle:'CREIAMO<br /><em>QUALCOSA DI INCREDIBILE?</em>',fields:['Il tuo nome','La tua email','Raccontami il progetto'],placeholders:['Come posso chiamarti?','tu@esempio.com','Un’idea, una sfida, un obiettivo...'],send:'INVIA MESSAGGIO ↗',find:'TROVAMI',made:'CREATO CON INTENZIONE + CODICE',top:'TORNA SU ↑',archive:'ARCHIVIO / PROGETTI',archiveTitle:'LAVORI DIVENTATI<br />PRODOTTI.',archiveLead:'Una selezione di sistemi, piattaforme ed esperienze digitali sviluppate per progetti nazionali e internazionali. I nuovi lavori vengono aggiunti quando vengono pubblicati.',allProjects:'TUTTI I PROGETTI',published:'06 PROGETTI PUBBLICATI',back:'TORNA AL PORTFOLIO ↗'},
+    fr:{about:'À propos',projects:'Projets',contact:'Contact',available:'Disponible',role:'Développeur Full Stack<br />& entrepreneur numérique.',aboutLead:'Je transforme des idées et des problèmes réels en produits numériques clairs, rapides et mémorables.',about1:'Je suis Guilherme Lima, développeur Full Stack et CTO de Speed Nexus. J’allie technologie, ingénierie et design pour créer des solutions qui ne se contentent pas de fonctionner : elles ont un impact.',about2:'De la stratégie à l’interface, je conçois des expériences avec intention, mouvement et personnalité.',selected:'Projets sélectionnés',all:'VOIR TOUS LES PROJETS ↗',tools:'STACK ET OUTILS',contactLead:'Vous avez une idée ? Donnons-lui vie.',contactTitle:'CRÉONS-NOUS<br /><em>QUELQUE CHOSE D’INCROYABLE ?</em>',fields:['Votre nom','Votre e-mail','Parlez-moi du projet'],placeholders:['Comment puis-je vous appeler ?','vous@exemple.com','Une idée, un défi, un objectif...'],send:'ENVOYER LE MESSAGE ↗',find:'RETROUVEZ-MOI',made:'CRÉÉ AVEC INTENTION + CODE',top:'RETOUR EN HAUT ↑',archive:'ARCHIVE / PROJETS',archiveTitle:'DES TRAVAUX DEVENUS<br />DES PRODUITS.',archiveLead:'Une sélection de systèmes, plateformes et expériences numériques développés pour des projets nationaux et internationaux. De nouveaux travaux sont ajoutés au fil de leur publication.',allProjects:'TOUS LES PROJETS',published:'06 PROJETS PUBLIÉS',back:'RETOUR AU PORTFOLIO ↗'}
+  };
+  const c=copy[currentLang],put=(s,v,h=false)=>{if(s==='.hero__ticker div'){fillTicker(v);return;}const e=document.querySelector(s);if(!e)return;h?e.innerHTML=v:e.textContent=v;};
+  const rotate={es:['Una experiencia aún mejor','Gira el teléfono para disfrutar mejor el portafolio.'],it:['Un’esperienza ancora migliore','Ruota il telefono per visualizzare al meglio il portfolio.'],fr:['Une expérience encore meilleure','Tournez votre téléphone pour mieux profiter du portfolio.']}[currentLang];put('.rotate-notice strong',rotate[0]);put('.rotate-notice small',rotate[1]);
+  if(document.body.classList.contains('archive-page')){
+    put('.archive-nav nav a:nth-child(1)',c.about);put('.archive-nav nav a:nth-child(2)',c.contact);put('.archive-nav .nav__status','← '+(currentLang==='es'?'Portafolio':currentLang==='it'?'Portfolio':'Portfolio'));put('.archive-hero__label',c.archive);put('.archive-hero h1',c.archiveTitle,true);put('.archive-hero p',c.archiveLead);put('.archive-list__head .section-label','<span>01</span> '+c.allProjects,true);put('.archive-list__head>p',c.published);put('.archive-footer a',c.back);
+    const desc={es:['Diagnóstico, integración de soluciones y seguimiento de resultados.','Sistema web de gestión de clínicas médicas.','Sitios y sistemas para fortalecer la presencia digital de pequeños negocios.','Experiencia institucional sobria para presentar servicios jurídicos con confianza y claridad.','Sitio de diseño de pestañas creado para una profesional brasileña que trabaja en Portugal.','Presencia digital acogedora para comunicar psicoterapia con seguridad y cercanía.'],it:['Diagnosi, integrazione di soluzioni e monitoraggio dei risultati.','Sistema web per la gestione di cliniche mediche.','Siti e sistemi per rafforzare la presenza digitale delle piccole imprese.','Esperienza istituzionale elegante per presentare servizi legali con fiducia e chiarezza.','Sito di lash design creato per una professionista brasiliana che lavora in Portogallo.','Presenza digitale accogliente per comunicare la psicoterapia con fiducia e vicinanza.'],fr:['Diagnostic, intégration de solutions et suivi des résultats.','Système web de gestion de cliniques médicales.','Sites et systèmes pour renforcer la présence numérique des petites entreprises.','Expérience institutionnelle sobre pour présenter des services juridiques avec confiance et clarté.','Site de lash design créé pour une professionnelle brésilienne exerçant au Portugal.','Présence numérique accueillante pour présenter la psychothérapie avec confiance et proximité.']}[currentLang];document.querySelectorAll('.archive-card .project-card__meta>p').forEach((e,i)=>e.textContent=desc[i]);
+    const tagMap={es:{ESTRATÉGIA:'ESTRATEGIA',TECNOLOGIA:'TECNOLOGÍA',NACIONAL:'NACIONAL',GESTÃO:'GESTIÓN',SAÚDE:'SALUD',TREINAMENTO:'FORMACIÓN',DESENVOLVIMENTO:'DESARROLLO',ADVOCACIA:'ABOGACÍA','INTERNACIONAL — PT':'INTERNACIONAL — PT',PSICOLOGIA:'PSICOLOGÍA'},it:{ESTRATÉGIA:'STRATEGIA',TECNOLOGIA:'TECNOLOGIA',NACIONAL:'NAZIONALE',GESTÃO:'GESTIONE',SAÚDE:'SALUTE',TREINAMENTO:'FORMAZIONE',DESENVOLVIMENTO:'SVILUPPO',ADVOCACIA:'LEGALE','INTERNACIONAL — PT':'INTERNAZIONALE — PT',PSICOLOGIA:'PSICOLOGIA'},fr:{ESTRATÉGIA:'STRATÉGIE',TECNOLOGIA:'TECHNOLOGIE',NACIONAL:'NATIONAL',GESTÃO:'GESTION',SAÚDE:'SANTÉ',TREINAMENTO:'FORMATION',DESENVOLVIMENTO:'DÉVELOPPEMENT',ADVOCACIA:'JURIDIQUE','INTERNACIONAL — PT':'INTERNATIONAL — PT',PSICOLOGIA:'PSYCHOLOGIE'}}[currentLang];document.querySelectorAll('.archive-card__tags i').forEach(e=>{if(tagMap[e.textContent])e.textContent=tagMap[e.textContent];});
+  }else{
+    put('.nav nav a:nth-child(1)',c.about);put('.nav nav a:nth-child(2)',c.projects);put('.nav nav a:nth-child(3)',c.contact);put('.nav__status','<i></i> '+c.available,true);put('.hero__side p',c.role,true);put('.about .section-label','<span>01</span> '+c.about.toUpperCase(),true);put('.about__lead',c.aboutLead);const ap=document.querySelectorAll('.about__copy>p');if(ap[0])ap[0].textContent=c.about1;if(ap[1])ap[1].textContent=c.about2;put('.projects .section-label','<span>02</span> '+c.selected.toUpperCase(),true);put('.projects-all',c.all);put('.skills .section-label','03 '+c.tools);put('.contact .section-label','04 '+c.contact.toUpperCase());put('.contact__top>p',c.contactLead);put('.contact h2',c.contactTitle,true);const labels=document.querySelectorAll('.contact-form label>span');labels.forEach((e,i)=>e.textContent=c.fields[i]);const fields=document.querySelectorAll('.contact-form input:not([type="hidden"]):not(.form-honey),.contact-form textarea');fields.forEach((e,i)=>e.placeholder=c.placeholders[i]);put('.contact-form button',c.send);put('.socials>p',c.find);put('footer span:nth-child(2)',c.made);put('footer a',c.top);
+    const mainExtra={
+      es:{facts:['Proyectos destacados','Visión de producto'],projectLabels:['01 / PLATAFORMA','02 / APLICACIÓN WEB','03 / ESTUDIO DIGITAL'],projectDesc:['Asesoría que diagnostica cuellos de botella, conecta tecnología y especialistas y convierte decisiones en resultados medibles.','Sistema web de gestión de clínicas médicas.','Presencia digital moderna para negocios que quieren crecer.'],skills:['Front-end','Back-end','Producto'],skillDesc:['Interfaces responsivas, accesibles y llenas de personalidad.','Aplicaciones estructuradas, integraciones y datos bien organizados.','Diagnóstico, estrategia y ejecución con foco en resultados reales.'],ticker:'DISEÑO • CÓDIGO • ESTRATEGIA • EXPERIENCIAS • DISEÑO • CÓDIGO • ESTRATEGIA • EXPERIENCIAS •'},
+      it:{facts:['Progetti in evidenza','Visione di prodotto'],projectLabels:['01 / PIATTAFORMA','02 / WEB APP','03 / STUDIO DIGITALE'],projectDesc:['Consulenza che individua i colli di bottiglia, collega tecnologia e specialisti e trasforma le decisioni in risultati misurabili.','Sistema web per la gestione di cliniche mediche.','Presenza digitale moderna per aziende che vogliono crescere.'],skills:['Front-end','Back-end','Prodotto'],skillDesc:['Interfacce responsive, accessibili e ricche di personalità.','Applicazioni strutturate, integrazioni e dati ben organizzati.','Diagnosi, strategia ed esecuzione focalizzate su risultati reali.'],ticker:'DESIGN • CODICE • STRATEGIA • ESPERIENZE • DESIGN • CODICE • STRATEGIA • ESPERIENZE •'},
+      fr:{facts:['Projets en vedette','Vision produit'],projectLabels:['01 / PLATEFORME','02 / APPLICATION WEB','03 / STUDIO NUMÉRIQUE'],projectDesc:['Conseil qui identifie les blocages, relie technologie et spécialistes et transforme les décisions en résultats mesurables.','Système web de gestion de cliniques médicales.','Présence numérique moderne pour les entreprises qui souhaitent grandir.'],skills:['Front-end','Back-end','Produit'],skillDesc:['Interfaces adaptatives, accessibles et pleines de personnalité.','Applications structurées, intégrations et données bien organisées.','Diagnostic, stratégie et exécution axés sur des résultats concrets.'],ticker:'DESIGN • CODE • STRATÉGIE • EXPÉRIENCES • DESIGN • CODE • STRATÉGIE • EXPÉRIENCES •'}
+    }[currentLang];
+    const factLabels=document.querySelectorAll('.about__facts span');factLabels.forEach((e,i)=>e.textContent=mainExtra.facts[i]);const metaLabels=document.querySelectorAll('.projects .project-card__meta>span');metaLabels.forEach((e,i)=>e.textContent=mainExtra.projectLabels[i]);const projectDescriptions=document.querySelectorAll('.projects .project-card__meta>p');projectDescriptions.forEach((e,i)=>e.textContent=mainExtra.projectDesc[i]);const skillTitles=document.querySelectorAll('.skill-card h3');skillTitles.forEach((e,i)=>e.textContent=mainExtra.skills[i]);const skillDescriptions=document.querySelectorAll('.skill-card p');skillDescriptions.forEach((e,i)=>e.textContent=mainExtra.skillDesc[i]);put('.hero__ticker div',mainExtra.ticker);
+  }
+}
+
+langButton?.addEventListener('change',()=>{currentLang=langButton.value;localStorage.setItem('portfolio-lang',currentLang);applyLanguage();});
+langPills.forEach(button=>button.addEventListener('click',()=>{currentLang=button.dataset.lang;localStorage.setItem('portfolio-lang',currentLang);applyLanguage();}));
+applyLanguage();
+
+const rotateNotice=document.querySelector('.rotate-notice');
+if(sessionStorage.getItem('rotate-notice-closed')==='1')rotateNotice?.classList.add('dismissed');
+rotateNotice?.querySelector('button')?.addEventListener('click',()=>{rotateNotice.classList.add('dismissed');sessionStorage.setItem('rotate-notice-closed','1');});
+
+document.getElementById('contact-form')?.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const form=e.currentTarget;
+  const button=form.querySelector('button[type="submit"]');
+  const status=form.querySelector('.form-status');
+  const original=button.innerHTML;
+  const sending={pt:'ENVIANDO...',en:'SENDING...',es:'ENVIANDO...',it:'INVIO...',fr:'ENVOI...'};button.disabled=true;button.textContent=sending[currentLang];status.textContent='';
+  try{
+    const response=await fetch('https://formsubmit.co/ajax/guilhermelimadejesus311009@gmail.com',{method:'POST',headers:{Accept:'application/json'},body:new FormData(form)});
+    if(!response.ok)throw new Error('Falha no envio');
+    const success={pt:'Mensagem enviada com sucesso. Obrigado pelo contato!',en:'Message sent successfully. Thank you!',es:'Mensaje enviado correctamente. ¡Gracias!',it:'Messaggio inviato con successo. Grazie!',fr:'Message envoyé avec succès. Merci !'};form.reset();status.textContent=success[currentLang];
+  }catch(error){const failure={pt:'Não foi possível enviar agora. Tente novamente em instantes.',en:'Unable to send right now. Please try again shortly.',es:'No fue posible enviar el mensaje. Inténtalo de nuevo en unos instantes.',it:'Impossibile inviare ora. Riprova tra poco.',fr:'Impossible d’envoyer maintenant. Réessayez dans quelques instants.'};status.textContent=failure[currentLang];}
+  finally{button.disabled=false;button.innerHTML=original;}
+});

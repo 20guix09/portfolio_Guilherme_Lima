@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#08080c" />
+  <meta name="description" content="Portfólio de Guilherme Lima — desenvolvedor Full Stack e criador de experiências digitais." />
+  <title>Guilherme Lima — Desenvolvedor Full Stack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2308080c'/%3E%3Ctext x='8' y='42' fill='white' font-family='Arial' font-size='27' font-weight='800'%3EGL%3C/text%3E%3Cpath d='M56 19 45 32l11 13' fill='none' stroke='%238b5cf6' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="loader" aria-hidden="true"><div class="loader__mark logo-mark">GL<span>&lt;</span></div><div class="loader__line"><i></i></div><span class="loader__count">00</span></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span>VER</span></div>
+
+  <header class="nav glass">
+    <a class="nav__logo nav__monogram magnetic" href="#inicio" aria-label="Início">GL<span>&lt;</span></a>
+    <nav aria-label="Navegação principal">
+      <a class="magnetic" href="#sobre">Sobre</a><a class="magnetic" href="#projetos">Projetos</a><a class="magnetic" href="#contato">Contato</a>
+    </nav>
+    <div class="lang-pills" aria-label="Selecionar idioma"><button data-lang="pt" type="button">PT</button><button data-lang="en" type="button">EN</button><button data-lang="es" type="button">ES</button><button data-lang="it" type="button">IT</button><button data-lang="fr" type="button">FR</button></div>
+    <select class="lang-toggle" aria-label="Selecionar idioma"><option value="pt">PT</option><option value="en">EN</option><option value="es">ES</option><option value="it">IT</option><option value="fr">FR</option></select>
+    <a class="nav__status magnetic" href="#contato"><i></i> Disponível</a>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="orb orb--one"></div><div class="orb orb--two"></div>
+      <div class="hero__eyebrow reveal">PORTFÓLIO / 2026 <span>—</span> LONDRINA, BR</div>
+      <div class="hero__content">
+        <h1><span class="title-line">GUILHERME</span><span class="title-line outline">LIMA</span></h1>
+        <div class="hero__side">
+          <p>Desenvolvedor Full Stack<br />& empreendedor digital.</p>
+          <a class="round-link magnetic" href="#projetos" aria-label="Ver projetos">↓</a>
+        </div>
+      </div>
+      <div class="portrait-wrap" data-cursor="FOTO">
+        <img src="assets/guilherme-lima-de-jesus.png" alt="Guilherme Lima de Jesus" />
+        <div class="portrait-glitch"></div>
+        <span>FULL STACK / CREATIVE DEV</span>
+      </div>
+      <div class="hero__ticker" aria-hidden="true"><div class="ticker-track"><div class="ticker-group"></div><div class="ticker-group"></div></div></div>
+    </section>
+
+    <section class="about section" id="sobre">
+      <div class="section-label"><span>01</span> SOBRE MIM</div>
+      <div class="about__grid">
+        <p class="about__lead split-text">Transformo ideias e problemas reais em produtos digitais claros, rápidos e memoráveis.</p>
+        <div class="about__copy reveal">
+          <p>Sou Guilherme Lima, desenvolvedor Full Stack e CTO da Speed Nexus. Gosto de unir tecnologia, engenharia e design para criar soluções que não apenas funcionam — elas geram impacto.</p>
+          <p>Da estratégia à interface, construo experiências com intenção, movimento e personalidade.</p>
+          <div class="about__facts"><div><strong>03+</strong><span>Projetos em destaque</span></div><div><strong>360°</strong><span>Visão de produto</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects section" id="projetos">
+      <div class="section-head"><div class="section-label"><span>02</span> PROJETOS SELECIONADOS</div><a class="projects-all magnetic" href="projetos.html">VER TODOS OS PROJETOS <span>↗</span></a></div>
+      <div class="project-grid">
+        <a class="project-card project-card--wide" data-cursor="VISITAR" href="https://www.speednexus.com.br/" target="_blank" rel="noopener noreferrer" aria-label="Visitar o site da Speed Nexus">
+          <img class="project-card__cover project-card__cover--site" src="assets/speed-nexus-site.png" alt="Página inicial do site da Speed Nexus" />
+          <div class="project-card__veil"></div><div class="project-card__meta"><span>01 / PLATAFORMA</span><h2>Speed Nexus</h2><p>Assessoria que diagnostica gargalos, conecta tecnologia e especialistas e transforma decisões em resultados acompanháveis.</p><small>WWW.SPEEDNEXUS.COM.BR ↗</small></div><span class="project-card__arrow">↗</span>
+        </a>
+        <article class="project-card" data-cursor="VER">
+          <img class="project-card__cover project-card__cover--site" src="assets/med-agenda-site.png" alt="Painel administrativo do sistema Med Agenda" />
+          <div class="project-card__veil"></div><div class="project-card__meta"><span>02 / WEB APP</span><h2>Med Agenda</h2><p>Sistema web de gestão de clínicas médicas.</p></div><span class="project-card__arrow">↗</span>
+        </article>
+        <article class="project-card" data-cursor="VER">
+          <img class="project-card__cover" src="assets/gm-web-cover.png" alt="Visual abstrato de criação digital para o projeto GM Web Studio" />
+          <div class="project-card__veil"></div><div class="project-card__meta"><span>03 / ESTÚDIO DIGITAL</span><h2>GM Web Studio</h2><p>Presença digital moderna para negócios que querem crescer.</p></div><span class="project-card__arrow">↗</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="skills section" aria-label="Habilidades">
+      <div class="section-label"><span>03</span> STACK & FERRAMENTAS</div>
+      <div class="marquee"><div class="marquee__track"><span>HTML</span><i>✦</i><span>CSS</span><i>✦</i><span>JAVASCRIPT</span><i>✦</i><span>REACT</span><i>✦</i><span>NODE.JS</span><i>✦</i><span>FIGMA</span><i>✦</i><span>GSAP</span><i>✦</i><span>HTML</span><i>✦</i><span>CSS</span><i>✦</i><span>JAVASCRIPT</span><i>✦</i><span>REACT</span><i>✦</i><span>NODE.JS</span><i>✦</i><span>FIGMA</span><i>✦</i><span>GSAP</span><i>✦</i></div></div>
+      <div class="skill-cards"><div class="skill-card glass reveal"><span>01</span><h3>Front-end</h3><p>Interfaces responsivas, acessíveis e cheias de personalidade.</p></div><div class="skill-card glass reveal"><span>02</span><h3>Back-end</h3><p>Aplicações estruturadas, integrações e dados bem organizados.</p></div><div class="skill-card glass reveal"><span>03</span><h3>Produto</h3><p>Diagnóstico, estratégia e execução com foco no resultado real.</p></div></div>
+    </section>
+
+    <section class="contact section" id="contato">
+      <div class="contact__top"><div class="section-label"><span>04</span> CONTATO</div><p>Tem uma ideia? Vamos tirar do papel.</p></div>
+      <h2 class="split-text">VAMOS CRIAR<br /><em>ALGO INCRÍVEL?</em></h2>
+      <div class="contact__grid">
+        <form id="contact-form" class="contact-form">
+          <input type="hidden" name="_subject" value="Novo contato pelo portfólio de Guilherme Lima de Jesus" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="text" name="_honey" class="form-honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <label><span>Seu nome</span><input name="nome" type="text" placeholder="Como posso te chamar?" required /></label>
+          <label><span>Seu e-mail</span><input name="email" type="email" placeholder="voce@exemplo.com" required /></label>
+          <label><span>Conte sobre o projeto</span><textarea name="mensagem" rows="3" placeholder="Uma ideia, um desafio, um objetivo..." required></textarea></label>
+          <button class="button magnetic" type="submit">ENVIAR MENSAGEM <span>↗</span></button><p class="form-status" role="status"></p>
+        </form>
+        <div class="socials"><p>ENCONTRE-ME</p><a class="magnetic" href="https://www.linkedin.com/in/guilherme-lima-de-jesus-a86766431?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_android" target="_blank" rel="noopener">LinkedIn <span>↗</span></a><a class="magnetic" href="https://github.com/20guix09" target="_blank" rel="noopener">GitHub <span>↗</span></a><a class="magnetic" href="https://instagram.com/" target="_blank" rel="noopener">Instagram <span>↗</span></a><a class="magnetic" href="https://wa.me/5543984457932?text=Ol%C3%A1%2C%20Guilherme%21%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto." target="_blank" rel="noopener">WhatsApp <span>↗</span></a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>© 2026 GUILHERME LIMA DE JESUS</span><span>FEITO COM INTENÇÃO + CÓDIGO</span><a href="#inicio">VOLTAR AO TOPO ↑</a></footer>
+  <aside class="rotate-notice" role="status"><span>↻</span><p><strong>Uma experiência ainda melhor</strong><small>Deite o celular para aproveitar melhor o portfólio.</small></p><button type="button" aria-label="Fechar aviso">×</button></aside>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
