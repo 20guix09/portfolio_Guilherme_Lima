@@ -1,0 +1,20 @@
+PORTFÓLIO — GUILHERME LIMA
+
+Todos os arquivos da versão atual do site.
+
+CONTEÚDO
+index.html — página principal
+styles.css — estilos gerais e desktop
+mobile.css — estilos para celular e tablet
+script.js — animações e interações gerais
+mobile.js — interações e navegação de telas pequenas
+assets/ — foto e personagem ilustrado otimizados em WebP
+
+COMO ABRIR
+Extraia o ZIP antes de abrir o index.html. Para desenvolvimento, use a extensão Live Server do VS Code ou execute python -m http.server 8000 nesta pasta e abra http://localhost:8000.
+
+PUBLICAÇÃO
+Site estático, sem npm e sem etapa de build. Publique o conteúdo desta pasta, com index.html na raiz. Preserve a pasta assets e os nomes dos arquivos.
+
+FONTES
+As fontes Syne e DM Sans são carregadas do Google Fonts. Sem internet, o navegador usa as fontes alternativas configuradas no CSS.
